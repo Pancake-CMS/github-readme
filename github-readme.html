@@ -1,0 +1,78 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<!--
+An element to retrieve and display the readme for any GitHub repository.
+
+Please note this element has not been endorsed by GitHub.
+
+Styling thanks to [github-markdown-css](https://github.com/sindresorhus/github-markdown-css). 
+
+##### Example
+
+    <github-readme user="BradDenver" repo="Preen"></github-readme>
+
+@element github-readme
+@blurb An element to retrieve and display the readme for any GitHub repository
+@homepage http://BradDenver.github.io/github-readme
+-->
+<dom-module id="github-readme">
+
+  <template>
+
+    <link rel="stylesheet" href="../github-markdown-css/github-markdown.css" />
+
+    <content></content>
+
+    <iron-ajax
+      auto
+      headers='{"Accept": "application/vnd.github.VERSION.html"}'
+      url$="https://api.github.com/repos/[[user]]/[[repo]]/readme"
+      handle-as="text"
+      on-response="ajaxResponseHandler"></iron-ajax>
+
+    <div id="responseDiv" class="markdown-body">{{responseBody}}</div>
+
+  </template>
+
+  <script>
+
+    Polymer({
+      is: 'github-readme',
+
+      properties: {
+        /**
+         * The GitHub username for the repo.
+         *
+         * @attribute user
+         * @type string
+         */
+         user: '',
+
+        /**
+         * The GitHub repository name to get the readme from.
+         *
+         * @attribute repo
+         * @type string
+         */
+        repo: '',
+
+        /**
+         * If true, automatically performs an Ajax request for the readme when the user and repo changes.
+         *
+         * @attribute auto
+         * @type bool
+         * @default false
+         */
+        auto: false,
+      },
+
+      ajaxResponseHandler: function(e) {
+        this.$.responseDiv.innerHTML = e.detail.response;
+      }
+
+    });
+
+  </script>
+
+</dom-module>
