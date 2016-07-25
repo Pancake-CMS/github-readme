@@ -6,7 +6,7 @@ An element to retrieve and display the readme for any GitHub repository.
 
 Please note this element has not been endorsed by GitHub.
 
-Styling thanks to [github-markdown-css](https://github.com/sindresorhus/github-markdown-css). 
+Styling thanks to [github-markdown-css](https://github.com/sindresorhus/github-markdown-css).
 
 ##### Example
 
@@ -47,7 +47,11 @@ Styling thanks to [github-markdown-css](https://github.com/sindresorhus/github-m
          * @attribute user
          * @type string
          */
-         user: '',
+         user: {
+           value: '',
+           type: String,
+           notify: true
+         },
 
         /**
          * The GitHub repository name to get the readme from.
@@ -55,7 +59,11 @@ Styling thanks to [github-markdown-css](https://github.com/sindresorhus/github-m
          * @attribute repo
          * @type string
          */
-        repo: '',
+        repo: {
+           value: '',
+           type: String,
+           notify: true
+         },
 
         /**
          * If true, automatically performs an Ajax request for the readme when the user and repo changes.
@@ -67,6 +75,24 @@ Styling thanks to [github-markdown-css](https://github.com/sindresorhus/github-m
         auto: false,
       },
 
+      /*
+       * Triggers when the param `repo` is changed in the attribute
+       */
+      repoChanged: function() {
+        this.$.querySelector('iron-ajax').generateRequest();
+      },
+
+      /*
+       *  Triggers when the param `user` is changed in the attribute
+       */
+      userChanged: function() {
+        this.$.querySelector('iron-ajax').generateRequest();
+      },
+
+      /*
+       * Handles the response from the github api
+       * @param e A response object from the `iron-ajax` element
+       */
       ajaxResponseHandler: function(e) {
         this.$.responseDiv.innerHTML = e.detail.response;
       }
